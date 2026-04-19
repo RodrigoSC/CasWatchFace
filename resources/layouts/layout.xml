@@ -1,0 +1,10 @@
+<layout id="WatchFace" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
+    <bitmap id="Background" filename="background.png" />
+    <label id="AltDateLabel" x="384" y="104" font="@Fonts.Eurostar" justification="Graphics.TEXT_JUSTIFY_RIGHT" color="Graphics.COLOR_WHITE" />
+    <label id="WeekDayLabel" x="70" y="140" font="@Fonts.SmallNumbersFont" justification="Graphics.TEXT_JUSTIFY_LEFT" color="Graphics.COLOR_BLACK" text="*"/>
+    <label id="DateLabel" x="395" y="140" font="@Fonts.SmallNumbersFont" justification="Graphics.TEXT_JUSTIFY_RIGHT" color="Graphics.COLOR_BLACK" />
+    <label id="TimeLabel" x="227" y="178" font="@Fonts.NumbersFont" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_BLACK" />
+    <label id="StepsLabel" x="70" y="340" font="@Fonts.Eurostar" justification="Graphics.TEXT_JUSTIFY_LEFT" color="Graphics.COLOR_WHITE" />
+    <label id="NotifsLabel" x="227" y="340" font="@Fonts.Eurostar" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_BLUE" />
+    <label id="FloorsLabel" x="384" y="340" font="@Fonts.Eurostar" justification="Graphics.TEXT_JUSTIFY_RIGHT" color="Graphics.COLOR_WHITE" />
+</layout>
