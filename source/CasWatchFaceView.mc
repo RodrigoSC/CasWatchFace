@@ -4,10 +4,13 @@ import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.System;
 import Toybox.Time;
+import Toybox.Weather;
 import Toybox.Time.Gregorian;
 import Toybox.WatchUi;
 
 class CasWatchFaceView extends WatchUi.WatchFace {
+    hidden var lastSlowUpdate as Number? = null;
+    hidden var weather as Dictionary = {};
 
     function initialize() {
         WatchFace.initialize();
@@ -51,12 +54,13 @@ class CasWatchFaceView extends WatchUi.WatchFace {
         } else {
             res = nbr.toString();
         }
-        while(res.length() < 2) {
-            res = "0" + res;
-        }
         return res;
     }
 
+    function padNumber(nbr as String) {
+        return nbr.length() < 2 ? "0" + nbr : nbr;
+    } 
+    
     function writeToLED(fieldId as String, value as String) {
         var mask = "";
         for (var i = 0; i < value.length(); i++) { mask += "$"; }
@@ -66,9 +70,31 @@ class CasWatchFaceView extends WatchUi.WatchFace {
 
     function getWeekDayPosition() as Number {
         var today = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
-        var pos = [68, 100, 132, 161, 194, 221, 247];
-        System.println(today.day_of_week);
+        var pos = [77, 113, 140, 175, 202, 230, 258];
         return pos[today.day_of_week - 1];
+    }
+
+    function updateWeather() {
+        var cc = Weather.getCurrentConditions();
+        if (cc != null) {
+            weather["Temp"] = cc.temperature as Number;
+            weather["WindBear"] = cc.windBearing as Number;
+            weather["WindSpeed"] = cc.windSpeed as Number;
+            weather["Rain"] = cc.precipitationChance as Number;
+        }
+    }
+
+    function getWindChar(windBear as Number) as String {
+        var aux = (windBear + 23) % 360;
+        if (aux < 45) { return "e"; }
+        if (aux >= 45 && aux < 90) { return "f"; }
+        if (aux >= 90 && aux < 135) { return "g"; }
+        if (aux >= 135 && aux < 180) { return "h"; }
+        if (aux >= 180 && aux < 225) { return "a"; }
+        if (aux >= 225 && aux < 270) { return "b"; }
+        if (aux >= 270 && aux < 315) { return "c"; }
+        if (aux >= 315 && aux < 360) { return "d"; }
+        return "-";
     }
 
     // Update the view
@@ -76,6 +102,20 @@ class CasWatchFaceView extends WatchUi.WatchFace {
         var clockTime = System.getClockTime();
         var hour = clockTime.hour;
         var minute = clockTime.min;
+        var unix_timestamp = Time.now().value();
+
+        if(clockTime.sec % 60 == 0 or lastSlowUpdate == null or unix_timestamp - lastSlowUpdate >= 60) {
+            lastSlowUpdate = unix_timestamp;
+        }
+        updateWeather();
+
+        if (weather["Temp"] != null) {
+            System.println(weather["Temp"]);
+            writeToLED("WeatherLabel",
+                weather["Temp"].format("%d") + "ª " + 
+                getWindChar(weather["WindBear"]) + + weather["WindSpeed"].format("%d") + " " +
+                weather["Rain"] + "%");
+        }
 
         var altOffset = Application.Properties.getValue("AltTimezoneOffset") as Number?;
 
@@ -98,18 +138,18 @@ class CasWatchFaceView extends WatchUi.WatchFace {
         (View.findDrawableById("TimeLabel") as Text).setText(timeStr);
 
         var info = ActivityMonitor.getInfo();
-        writeToLED("StepsValLabel",toThousands(info.steps));
-        writeToLED("FloorsValLabel",toThousands(info.floorsClimbed));
+        writeToLED("StepsValLabel",padNumber(toThousands(info.steps)));
+        writeToLED("FloorsValLabel",padNumber(toThousands(info.floorsClimbed)));
 
         var notifications = System.getDeviceSettings().notificationCount;
         var notifStr = (notifications > 0) 
             ? toThousands(notifications)
             : "--";
-        writeToLED("NotifsValLabel",notifStr);
+        writeToLED("NotifsValLabel",padNumber(notifStr));
         
         var battery = System.getSystemStats().battery;
         (View.findDrawableById("BatteryLabel") as Text).setVisible(battery <= 5);
-
+        
         // Draw background and labels
         View.onUpdate(dc);
     }

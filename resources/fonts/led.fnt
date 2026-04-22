@@ -63,7 +63,8 @@ char id=47 x=860 y=0 width=14 height=20 xoffset=0 yoffset=0 xadvance=18 page=0
 char id=92 x=875 y=0 width=14 height=20 xoffset=0 yoffset=0 xadvance=18 page=0
 char id=36 x=890 y=0 width=14 height=20 xoffset=0 yoffset=0 xadvance=18 page=0
 
-char id=197 x=905 y=0 width=14 height=20 xoffset=0 yoffset=0 xadvance=18 page=0
+char id=170 x=905 y=0 width=14 height=20 xoffset=0 yoffset=0 xadvance=18 page=0
+
 char id=196 x=920 y=0 width=14 height=20 xoffset=0 yoffset=0 xadvance=18 page=0
 char id=214 x=935 y=0 width=14 height=20 xoffset=0 yoffset=0 xadvance=18 page=0
 char id=201 x=950 y=0 width=14 height=20 xoffset=0 yoffset=0 xadvance=18 page=0
