@@ -46,14 +46,22 @@ class CasWatchFaceView extends WatchUi.WatchFace {
         var res;
         if (nbr == null) {
             res = "--";
+        } else if (nbr >= 1000) {
+            res = (nbr / 1000).toString() + "." + ((nbr % 1000) / 100).toString() + "K";
         } else {
-            if (nbr >= 1000) {
-                res = (nbr / 1000).toString() + "." + ((nbr % 1000) / 100).toString() + "k";
-            } else {
-                res = nbr.toString();
-            }
+            res = nbr.toString();
+        }
+        while(res.length() < 2) {
+            res = "0" + res;
         }
         return res;
+    }
+
+    function writeToLED(fieldId as String, value as String) {
+        var mask = "";
+        for (var i = 0; i < value.length(); i++) { mask += "$"; }
+        (View.findDrawableById(fieldId + "Bg") as Text).setText(mask);
+        (View.findDrawableById(fieldId) as Text).setText(value);
     }
 
     function getWeekDayPosition() as Number {
@@ -90,15 +98,18 @@ class CasWatchFaceView extends WatchUi.WatchFace {
         (View.findDrawableById("TimeLabel") as Text).setText(timeStr);
 
         var info = ActivityMonitor.getInfo();
-        (View.findDrawableById("StepsLabel") as Text).setText(toThousands(info.steps) + " STEPS");
-        (View.findDrawableById("FloorsLabel") as Text).setText(toThousands(info.floorsClimbed) + " FLOORS");
+        writeToLED("StepsValLabel",toThousands(info.steps));
+        writeToLED("FloorsValLabel",toThousands(info.floorsClimbed));
 
         var notifications = System.getDeviceSettings().notificationCount;
         var notifStr = (notifications > 0) 
-            ? toThousands(notifications)  + " NOTIFS"
-            : "";
-        (View.findDrawableById("NotifsLabel") as Text).setText(notifStr);
+            ? toThousands(notifications)
+            : "--";
+        writeToLED("NotifsValLabel",notifStr);
         
+        var battery = System.getSystemStats().battery;
+        (View.findDrawableById("BatteryLabel") as Text).setVisible(battery <= 5);
+
         // Draw background and labels
         View.onUpdate(dc);
     }
