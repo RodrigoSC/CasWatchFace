@@ -111,10 +111,14 @@ class CasWatchFaceView extends WatchUi.WatchFace {
 
         if (weather["Temp"] != null) {
             System.println(weather["Temp"]);
-            writeToLED("WeatherLabel",
-                weather["Temp"].format("%d") + "ª " + 
-                getWindChar(weather["WindBear"]) + + weather["WindSpeed"].format("%d") + " " +
-                weather["Rain"] + "%");
+            var tempData = weather["Temp"].format("%d") + "ª";
+            if (weather["WindSpeed"] != null && weather["WindBear"] != null) {
+                tempData += " " + getWindChar(weather["WindBear"]) + weather["WindSpeed"].format("%d") + " ";
+            }            
+            if (weather["Rain"] != null) {
+                tempData += weather["Rain"] + "%";
+            }
+            writeToLED("WeatherLabel",tempData);
         }
 
         var altOffset = Application.Properties.getValue("AltTimezoneOffset") as Number?;
