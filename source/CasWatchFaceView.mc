@@ -106,11 +106,10 @@ class CasWatchFaceView extends WatchUi.WatchFace {
 
         if(clockTime.sec % 60 == 0 or lastSlowUpdate == null or unix_timestamp - lastSlowUpdate >= 60) {
             lastSlowUpdate = unix_timestamp;
+            updateWeather();
         }
-        updateWeather();
 
         if (weather["Temp"] != null) {
-            System.println(weather["Temp"]);
             var tempData = weather["Temp"].format("%d") + "ª";
             if (weather["WindSpeed"] != null && weather["WindBear"] != null) {
                 tempData += " " + getWindChar(weather["WindBear"]) + weather["WindSpeed"].format("%d") + " ";
