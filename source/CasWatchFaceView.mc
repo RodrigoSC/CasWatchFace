@@ -50,7 +50,7 @@ class CasWatchFaceView extends WatchUi.WatchFace {
         if (nbr == null) {
             res = "--";
         } else if (nbr >= 1000) {
-            res = (nbr / 1000).toString() + "." + ((nbr % 1000) / 100).toString() + "K";
+            res = (nbr / 1000).toString() + "." + ((nbr % 1000) / 100).toString() + "k";
         } else {
             res = nbr.toString();
         }
@@ -73,14 +73,33 @@ class CasWatchFaceView extends WatchUi.WatchFace {
         var pos = [77, 113, 140, 175, 202, 230, 258];
         return pos[today.day_of_week - 1];
     }
-
+    
     function updateWeather() {
         var cc = Weather.getCurrentConditions();
+        var loc = cc.observationLocationPosition;
         if (cc != null) {
+            var now = Time.now();
             weather["Temp"] = cc.temperature as Number;
             weather["WindBear"] = cc.windBearing as Number;
             weather["WindSpeed"] = cc.windSpeed as Number;
             weather["Rain"] = cc.precipitationChance as Number;
+            if (loc != null) {
+                var sunrise = Weather.getSunrise(loc, now);
+                var sunset = Weather.getSunset(loc, now);
+                if (sunrise.lessThan(now)) { 
+                    //if sunrise was already, take tomorrows
+                    sunrise = Weather.getSunrise(loc, Time.today().add(new Time.Duration(86401)));
+                }
+                if (sunset.lessThan(now)) { 
+                    //if sunset was already, take tomorrows
+                    sunset = Weather.getSunset(loc, Time.today().add(new Time.Duration(86401)));
+                }
+                weather["Sunrise"] = sunrise;
+                weather["Sunset"] = sunset;
+            } else {
+                weather["Sunrise"] = null;
+                weather["Sunset"] = null;
+            }
         }
     }
 
@@ -95,6 +114,14 @@ class CasWatchFaceView extends WatchUi.WatchFace {
         if (aux >= 270 && aux < 315) { return "c"; }
         if (aux >= 315 && aux < 360) { return "d"; }
         return "-";
+    }
+
+    function formatSunTime(moment as Time.Moment?) as String {
+        if (moment == null) { return "--:--"; }
+        var info = Gregorian.info(moment, Time.FORMAT_SHORT);
+        var hh = info.hour < 10 ? "0" + info.hour.toString() : info.hour.toString();
+        var mm = info.min < 10 ? "0" + info.min.toString() : info.min.toString();
+        return hh + ":" + mm;
     }
 
     // Update the view
@@ -112,8 +139,8 @@ class CasWatchFaceView extends WatchUi.WatchFace {
         if (weather["Temp"] != null) {
             var tempData = weather["Temp"].format("%d") + "ª";
             if (weather["WindSpeed"] != null && weather["WindBear"] != null) {
-                tempData += " " + getWindChar(weather["WindBear"]) + weather["WindSpeed"].format("%d") + " ";
-            }            
+                tempData += weather["WindSpeed"].format("%d") + getWindChar(weather["WindBear"]) ;
+            }
             if (weather["Rain"] != null) {
                 tempData += weather["Rain"] + "%";
             }
@@ -122,18 +149,23 @@ class CasWatchFaceView extends WatchUi.WatchFace {
 
         var altOffset = Application.Properties.getValue("AltTimezoneOffset") as Number?;
 
-        var dateStr = (altOffset != null && altOffset != -9999)
-            ? formatAltTimezone(altOffset)
-            : formatDate();
-        (View.findDrawableById("DateLabel") as Text).setText(dateStr);
+        if (altOffset != null && altOffset != -9999) {
+            (View.findDrawableById("AltTimeLabel") as Text).setText("TIME");
+            writeToLED("AltTime",formatAltTimezone(altOffset));    
+        } else {
+            if (weather["Sunrise"].lessThan(weather["Sunset"])) {
+                (View.findDrawableById("AltTimeLabel") as Text).setText("SUNRISE");
+                writeToLED("AltTime",formatSunTime(weather["Sunrise"]));
+            } else {
+                (View.findDrawableById("AltTimeLabel") as Text).setText("SUNSET");
+                writeToLED("AltTime",formatSunTime(weather["Sunset"]));
+            }
+        }
+
+        (View.findDrawableById("DateLabel") as Text).setText(formatDate());
 
         var wdText = (View.findDrawableById("WeekDayLabel") as Text);
         wdText.setLocation(getWeekDayPosition(), wdText.locY);
-
-        var altDateStr = (altOffset != null && altOffset != -9999)
-            ? formatDate()
-            : "";
-        (View.findDrawableById("AltDateLabel") as Text).setText(altDateStr);
 
         // Format time as HH:MM
         var timeStr = (hour / 10).toString() + (hour % 10).toString() + ":" +
