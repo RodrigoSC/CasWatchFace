@@ -70,7 +70,7 @@ class CasWatchFaceView extends WatchUi.WatchFace {
 
     function getWeekDayPosition() as Number {
         var today = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
-        var pos = [77, 113, 140, 175, 202, 230, 258];
+        var pos = [77, 113, 140, 175, 204, 233, 258];
         return pos[today.day_of_week - 1];
     }
     
@@ -83,15 +83,19 @@ class CasWatchFaceView extends WatchUi.WatchFace {
             weather["WindBear"] = cc.windBearing as Number;
             weather["WindSpeed"] = cc.windSpeed as Number;
             weather["Rain"] = cc.precipitationChance as Number;
+            weather["Night"] = false;
             if (loc != null) {
                 var sunrise = Weather.getSunrise(loc, now);
                 var sunset = Weather.getSunset(loc, now);
                 if (sunrise.lessThan(now)) { 
                     //if sunrise was already, take tomorrows
                     sunrise = Weather.getSunrise(loc, Time.today().add(new Time.Duration(86401)));
+                } else {
+                    weather["Night"] = true;
                 }
                 if (sunset.lessThan(now)) { 
                     //if sunset was already, take tomorrows
+                    weather["Night"] = true;
                     sunset = Weather.getSunset(loc, Time.today().add(new Time.Duration(86401)));
                 }
                 weather["Sunrise"] = sunrise;
@@ -134,6 +138,24 @@ class CasWatchFaceView extends WatchUi.WatchFace {
         if(clockTime.sec % 60 == 0 or lastSlowUpdate == null or unix_timestamp - lastSlowUpdate >= 60) {
             lastSlowUpdate = unix_timestamp;
             updateWeather();
+        }
+
+        var colorTheme = Application.Properties.getValue("ColorTheme") as Number?;
+        var isNight;
+        if (colorTheme == 1) {
+            isNight = false;
+        } else if (colorTheme == 2) {
+            isNight = true;
+        } else {
+            isNight = weather["Night"] as Boolean?;
+        }
+        if (isNight != null) {
+            var textColor = isNight ? Graphics.COLOR_LT_GRAY : Graphics.COLOR_BLACK;
+            (View.findDrawableById("Background") as Bitmap).setVisible(!isNight);
+            (View.findDrawableById("BackgroundDark") as Bitmap).setVisible(isNight);
+            (View.findDrawableById("WeekDayLabel") as Text).setColor(textColor);
+            (View.findDrawableById("DateLabel") as Text).setColor(textColor);
+            (View.findDrawableById("TimeLabel") as Text).setColor(textColor);
         }
 
         if (weather["Temp"] != null) {

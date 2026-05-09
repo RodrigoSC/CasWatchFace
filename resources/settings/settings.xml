@@ -2,9 +2,17 @@
 
     <properties>
         <property id="AltTimezoneOffset" type="number">-9999</property>
+        <property id="ColorTheme" type="number">0</property>
     </properties>
 
     <settings>
+        <setting propertyKey="@Properties.ColorTheme" title="Color Theme">
+            <settingConfig type="list">
+                <listEntry value="0">Auto</listEntry>
+                <listEntry value="1">Light</listEntry>
+                <listEntry value="2">Dark</listEntry>
+            </settingConfig>
+        </setting>
         <setting propertyKey="@Properties.AltTimezoneOffset" title="Alternative Timezone">
             <settingConfig type="list">
                 <listEntry value="-9999">None</listEntry>

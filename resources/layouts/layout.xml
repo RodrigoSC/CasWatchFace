@@ -1,5 +1,6 @@
 <layout id="WatchFace" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
     <bitmap id="Background" filename="background.png" />
+    <bitmap id="BackgroundDark" filename="background-dark.png" visible="false" />
 
     <label id="AltTimeLabel" x="227" y="27" font="@Fonts.Eurostar" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_WHITE" text="SUNSET"/>
     <label id="AltTimeBg" x="227"    y="45" font="@Fonts.Led" justification="Graphics.TEXT_JUSTIFY_CENTER" color="#373737" />
