@@ -28,5 +28,6 @@ A retro LCD-style Garmin watch face inspired by classic digital watches.
 
 - Garmin Forerunner 965
 - Garmin Forerunner 265
+- Garmin Venu 3
 
 Requires Connect IQ 5.2.0+

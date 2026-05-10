@@ -1,5 +1,5 @@
 project.manifest = manifest.xml
 
 fr965.excludeAnnotations = Round416
-
+venu3.excludeAnnotations = Round416
 fr265.excludeAnnotations = Round454
