@@ -1,6 +1,6 @@
 # CasWatchFace
 
-A retro LCD-style watch face for the **Garmin Forerunner 965**, inspired by classic digital watches.
+A retro LCD-style Garmin watch face inspired by classic digital watches.
 
 | Light | Dark |
 |:---:|:---:|
@@ -24,6 +24,9 @@ A retro LCD-style watch face for the **Garmin Forerunner 965**, inspired by clas
 | Color Theme | Auto / Light / Dark | Auto |
 | Alternative Timezone | UTC−12:00 … UTC+14:00 / None | None |
 
-## Device
+## Devices
 
-Garmin Forerunner 965 (Connect IQ 5.2.0+)
+- Garmin Forerunner 965
+- Garmin Forerunner 265
+
+Requires Connect IQ 5.2.0+
