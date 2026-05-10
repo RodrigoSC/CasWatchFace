@@ -1,31 +1,65 @@
-<layout id="WatchFace" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
-    <bitmap id="Background" filename="background.png" />
-    <bitmap id="BackgroundDark" filename="background-dark.png" visible="false" />
+<layout id="WatchFace" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
+    <drawable id="Background" visible="false"/>
+    <drawable id="BackgroundDark" visible="false"/>
+    
+    <label id="AltTimeLabel" x="227"
+        y="27"
+        font="@Fonts.Eurostar" justification="Graphics.TEXT_JUSTIFY_CENTER"
+        color="Graphics.COLOR_WHITE" text="SUNSET" />
+    <label id="AltTimeBg" x="227" y="45"
+        font="@Fonts.Led" justification="Graphics.TEXT_JUSTIFY_CENTER" color="#373737" />
+    <label
+        id="AltTime" x="227" y="45" font="@Fonts.Led" justification="Graphics.TEXT_JUSTIFY_CENTER"
+        color="Graphics.COLOR_LT_GRAY" />
 
-    <label id="AltTimeLabel" x="227" y="27" font="@Fonts.Eurostar" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_WHITE" text="SUNSET"/>
-    <label id="AltTimeBg" x="227"    y="45" font="@Fonts.Led" justification="Graphics.TEXT_JUSTIFY_CENTER" color="#373737" />
-    <label id="AltTime"   x="227"    y="45" font="@Fonts.Led" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_LT_GRAY" />
 
-
-    <label id="WeekDayLabel" x="70" y="140" font="@Fonts.SmallNumbersFont" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_BLACK" text="*"/>
-    <label id="DateLabel"    x="395" y="140" font="@Fonts.SmallNumbersFont" justification="Graphics.TEXT_JUSTIFY_RIGHT" color="Graphics.COLOR_BLACK" />
-    <label id="TimeLabel"    x="227" y="178" font="@Fonts.NumbersFont" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_BLACK" />
+    <label id="WeekDayLabel" x="70" y="140"
+        font="@Fonts.SmallNumbersFont" justification="Graphics.TEXT_JUSTIFY_CENTER"
+        color="Graphics.COLOR_BLACK" text="*" />
+    <label id="DateLabel" x="395" y="140"
+        font="@Fonts.SmallNumbersFont" justification="Graphics.TEXT_JUSTIFY_RIGHT"
+        color="Graphics.COLOR_BLACK" />
+    <label id="TimeLabel" x="227" y="178"
+        font="@Fonts.NumbersFont" justification="Graphics.TEXT_JUSTIFY_CENTER"
+        color="Graphics.COLOR_BLACK" />
     
     
-    <label id="NotifsLabel"      x="105" y="340" font="@Fonts.Eurostar" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_WHITE" text="NOTIFS"/>
-    <label id="NotifsValLabelBg" x="105" y="358" font="@Fonts.Led" justification="Graphics.TEXT_JUSTIFY_CENTER" color="#373737" />
-    <label id="NotifsValLabel"   x="105" y="358" font="@Fonts.Led" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_LT_GRAY" />
+    <label id="NotifsLabel" x="105" y="340"
+        font="@Fonts.Eurostar" justification="Graphics.TEXT_JUSTIFY_CENTER"
+        color="Graphics.COLOR_WHITE" text="NOTIFS" />
+    <label id="NotifsBg" x="105" y="358"
+        font="@Fonts.Led" justification="Graphics.TEXT_JUSTIFY_CENTER" color="#373737" />
+    <label
+        id="Notifs" x="105" y="358" font="@Fonts.Led" justification="Graphics.TEXT_JUSTIFY_CENTER"
+        color="Graphics.COLOR_LT_GRAY" />
 
-    <label id="StepsLabel"      x="227" y="340" font="@Fonts.Eurostar" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_WHITE" text="STEPS"/>
-    <label id="StepsValLabelBg" x="227" y="358" font="@Fonts.Led" justification="Graphics.TEXT_JUSTIFY_CENTER" color="#373737" />
-    <label id="StepsValLabel"   x="227" y="358" font="@Fonts.Led" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_LT_GRAY" />
+    <label id="StepsLabel" x="227" y="340"
+        font="@Fonts.Eurostar" justification="Graphics.TEXT_JUSTIFY_CENTER"
+        color="Graphics.COLOR_WHITE" text="STEPS" />
+    <label id="StepsBg" x="227" y="358"
+        font="@Fonts.Led" justification="Graphics.TEXT_JUSTIFY_CENTER" color="#373737" />
+    <label
+        id="Steps" x="227" y="358" font="@Fonts.Led"
+        justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_LT_GRAY" />
     
-    <label id="FloorsLabel"      x="349" y="340" font="@Fonts.Eurostar" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_WHITE" text="FLOORS"/>
-    <label id="FloorsValLabelBg" x="349" y="358" font="@Fonts.Led" justification="Graphics.TEXT_JUSTIFY_CENTER" color="#373737" />
-    <label id="FloorsValLabel"   x="349" y="358" font="@Fonts.Led" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_LT_GRAY" />
+    <label
+        id="FloorsLabel" x="349" y="340" font="@Fonts.Eurostar"
+        justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_WHITE" text="FLOORS" />
+    <label
+        id="FloorsBg" x="349" y="358" font="@Fonts.Led"
+        justification="Graphics.TEXT_JUSTIFY_CENTER" color="#373737" />
+    <label id="Floors"
+        x="349" y="358" font="@Fonts.Led" justification="Graphics.TEXT_JUSTIFY_CENTER"
+        color="Graphics.COLOR_LT_GRAY" />
     
-    <label id="BatteryLabel"     x="390" y="100" font="@Fonts.Eurostar" justification="Graphics.TEXT_JUSTIFY_RIGHT" color="Graphics.COLOR_RED" text="%"/>
+    <label id="Battery" x="390" y="100"
+        font="@Fonts.Eurostar" justification="Graphics.TEXT_JUSTIFY_RIGHT"
+        color="Graphics.COLOR_RED" text="%" />
 
-    <label id="WeatherLabelBg" x="227" y="410" font="@Fonts.Led" justification="Graphics.TEXT_JUSTIFY_CENTER" color="#373737" />
-    <label id="WeatherLabel"   x="227" y="410" font="@Fonts.Led" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_LT_GRAY" />
+    <label id="WeatherBg" x="227" y="410"
+        font="@Fonts.Led" justification="Graphics.TEXT_JUSTIFY_CENTER" color="#373737" />
+    <label
+        id="Weather" x="227" y="410" font="@Fonts.Led"
+        justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_LT_GRAY" />
 </layout>

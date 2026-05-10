@@ -11,12 +11,26 @@ import Toybox.WatchUi;
 class CasWatchFaceView extends WatchUi.WatchFace {
     hidden var lastSlowUpdate as Number? = null;
     hidden var weather as Dictionary = {};
+    hidden var screenWidth as Number;
+    hidden var screenHeight as Number;
+    hidden var centerX as Number;
+    hidden var centerY as Number;
+
+    (:Round416) private const week_day_positions = [71, 104, 128, 161, 187, 214, 237] as Array;
+    (:Round454) private const week_day_positions = [77, 113, 140, 175, 204, 233, 258] as Array;
+
+    (:Round416) private const showWeather = false;
+    (:Round454) private const showWeather = true;
 
     function initialize() {
         WatchFace.initialize();
+        var settings = Toybox.System.getDeviceSettings();
+        screenWidth = settings.screenWidth;
+        screenHeight = settings.screenHeight;
+        centerX = Math.round(screenWidth/2);
+        centerY = Math.round(screenHeight/2);
     }
 
-    // Load your resources here
     function onLayout(dc as Dc) as Void {
         setLayout(Rez.Layouts.WatchFace(dc));
     }
@@ -67,13 +81,12 @@ class CasWatchFaceView extends WatchUi.WatchFace {
         (View.findDrawableById(fieldId + "Bg") as Text).setText(mask);
         (View.findDrawableById(fieldId) as Text).setText(value);
     }
-
+    
     function getWeekDayPosition() as Number {
         var today = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
-        var pos = [77, 113, 140, 175, 204, 233, 258];
-        return pos[today.day_of_week - 1];
+        return week_day_positions[today.day_of_week - 1];
     }
-    
+
     function updateWeather() {
         var cc = Weather.getCurrentConditions();
         var loc = cc.observationLocationPosition;
@@ -128,6 +141,42 @@ class CasWatchFaceView extends WatchUi.WatchFace {
         return hh + ":" + mm;
     }
 
+    (:Round416) hidden const AltTimeY = 25;
+    (:Round454) hidden const AltTimeY = 27;
+    (:Round416) hidden const DateY = 128;
+    (:Round454) hidden const DateY = 140;
+    (:Round416) hidden const DateX = 362;
+    (:Round454) hidden const DateX = 395;
+    (:Round416) hidden const TimeY = 166;
+    (:Round454) hidden const TimeY = 178;
+    (:Round416) hidden const BottomLedsY = 312;
+    (:Round454) hidden const BottomLedsY = 340;
+    (:Round416) hidden const BottomLedsMargin = 96;
+    (:Round454) hidden const BottomLedsMargin = 105;
+    (:Round416) hidden const WeatherY = 376;
+    (:Round454) hidden const WeatherY = 410;
+
+    function adjustPositions(dc as Dc) as Void {
+        adjustLedPosition(dc, "AltTime", centerX, AltTimeY);
+        (View.findDrawableById("WeekDayLabel") as Text).setLocation(0, DateY);
+        (View.findDrawableById("DateLabel") as Text).setLocation(DateX, DateY);
+        (View.findDrawableById("TimeLabel") as Text).setLocation(centerX, TimeY);
+        adjustLedPosition(dc, "Notifs", BottomLedsMargin, BottomLedsY);
+        adjustLedPosition(dc, "Steps", centerX, BottomLedsY);
+        adjustLedPosition(dc, "Floors", screenWidth - BottomLedsMargin, BottomLedsY);
+        adjustLedPosition(dc, "Weather", centerX, WeatherY);
+    }
+
+    function adjustLedPosition(dc as Dc, name as String, x as Number, y as Number) {
+        var ledLabelSep = 0;
+        if (View.findDrawableById(name + "Label") != null) {
+            (View.findDrawableById(name + "Label") as Text).setLocation(x, y);
+            ledLabelSep = 18;
+        }
+        (View.findDrawableById(name + "Bg") as Text).setLocation(x, y + ledLabelSep);
+        (View.findDrawableById(name) as Text).setLocation(x, y + ledLabelSep);
+    }
+
     // Update the view
     function onUpdate(dc as Dc) as Void {
         var clockTime = System.getClockTime();
@@ -139,6 +188,8 @@ class CasWatchFaceView extends WatchUi.WatchFace {
             lastSlowUpdate = unix_timestamp;
             updateWeather();
         }
+
+        adjustPositions(dc);
 
         var colorTheme = Application.Properties.getValue("ColorTheme") as Number?;
         var isNight;
@@ -158,7 +209,7 @@ class CasWatchFaceView extends WatchUi.WatchFace {
             (View.findDrawableById("TimeLabel") as Text).setColor(textColor);
         }
 
-        if (weather["Temp"] != null) {
+        if (weather["Temp"] != null and showWeather) {
             var tempData = weather["Temp"].format("%d") + "ª";
             if (weather["WindSpeed"] != null && weather["WindBear"] != null) {
                 tempData += weather["WindSpeed"].format("%d") + getWindChar(weather["WindBear"]) ;
@@ -166,7 +217,7 @@ class CasWatchFaceView extends WatchUi.WatchFace {
             if (weather["Rain"] != null) {
                 tempData += weather["Rain"] + "%";
             }
-            writeToLED("WeatherLabel",tempData);
+            writeToLED("Weather",tempData);
         }
 
         var altOffset = Application.Properties.getValue("AltTimezoneOffset") as Number?;
@@ -195,19 +246,18 @@ class CasWatchFaceView extends WatchUi.WatchFace {
         (View.findDrawableById("TimeLabel") as Text).setText(timeStr);
 
         var info = ActivityMonitor.getInfo();
-        writeToLED("StepsValLabel",padNumber(toThousands(info.steps)));
-        writeToLED("FloorsValLabel",padNumber(toThousands(info.floorsClimbed)));
+        writeToLED("Steps",padNumber(toThousands(info.steps)));
+        writeToLED("Floors",padNumber(toThousands(info.floorsClimbed)));
 
         var notifications = System.getDeviceSettings().notificationCount;
         var notifStr = (notifications > 0) 
             ? toThousands(notifications)
             : "--";
-        writeToLED("NotifsValLabel",padNumber(notifStr));
+        writeToLED("Notifs",padNumber(notifStr));
         
         var battery = System.getSystemStats().battery;
-        (View.findDrawableById("BatteryLabel") as Text).setVisible(battery <= 5);
+        (View.findDrawableById("Battery") as Text).setVisible(battery <= 5);
         
-        // Draw background and labels
         View.onUpdate(dc);
     }
 
